@@ -153,6 +153,16 @@ TEMPLATE = r"""<!doctype html>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="referrer" content="no-referrer">
+<meta name="theme-color" content="#fffaf2">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="ちいかわビューア">
+<meta name="application-name" content="ちいかわビューア">
+<meta name="format-detection" content="telephone=no">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
 <title>ちいかわ まんがビューア</title>
 <script>document.documentElement.className="js";</script>
 <style>
@@ -277,6 +287,54 @@ main{max-width:1400px;margin:0 auto;padding:14px}
 .sheet [hidden]{display:none}
 .sh-foot{display:flex;justify-content:space-between;align-items:center;margin-top:12px;font-size:12px;color:var(--sub)}
 .sh-foot .btn{font-size:12px;padding:4px 10px}
+/* safe area (iPhone notch / home indicator, standalone mode) */
+.chip[hidden],.btn[hidden],.a2hs[hidden]{display:none}
+header{padding-top:max(10px,env(safe-area-inset-top));padding-left:max(14px,env(safe-area-inset-left));padding-right:max(14px,env(safe-area-inset-right))}
+main{padding-left:max(14px,env(safe-area-inset-left));padding-right:max(14px,env(safe-area-inset-right));padding-bottom:calc(14px + env(safe-area-inset-bottom))}
+.toast,.top-btn{bottom:calc(18px + env(safe-area-inset-bottom))}
+.snack{bottom:calc(76px + env(safe-area-inset-bottom))}
+.mbar{padding-left:max(10px,env(safe-area-inset-left));padding-right:max(10px,env(safe-area-inset-right))}
+@media (max-width:600px){main{padding-left:max(10px,env(safe-area-inset-left));padding-right:max(10px,env(safe-area-inset-right))}
+  .ctrl input[type=search]{min-width:72px;flex-basis:72px}.ctrl #calBtn{padding:6px 10px}}
+/* お気に入り / 新着 */
+.tw{position:relative}
+.fv{position:absolute;right:6px;bottom:6px;z-index:1;width:36px;height:36px;border-radius:50%;border:0;padding:0;background:rgba(255,255,255,.9);color:#c9b8a8;font-size:20px;line-height:36px;cursor:pointer;box-shadow:0 1px 4px rgba(90,70,54,.22)}
+.card.fav .fv{color:#f2b100;background:#fff7d1}
+.fv:active{transform:scale(.9)}
+.nw{display:none;position:absolute;left:6px;bottom:8px;z-index:1;background:#ff6f91;color:#fff;font:bold 11px/1 system-ui,sans-serif;letter-spacing:.08em;border-radius:99px;padding:4px 8px;box-shadow:0 1px 3px rgba(0,0,0,.2)}
+.card.new .nw{display:block}
+.chip b{color:var(--pink2)}
+.chip.nwc{border-color:#ffb3c6;background:#fff4f7}
+.btn.sm{font-size:13px;padding:5px 10px}
+#mfav{font-size:16px;padding:5px 11px}
+#mfav.on{background:#fff1b3;color:#e0a000}
+/* カレンダー（年表） */
+.cal-top{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:4px}
+.cal-note{font-size:11px;color:var(--sub);margin:6px 0 0;line-height:1.5}
+.cy{margin:14px 0 4px}
+.cy-h{display:flex;align-items:baseline;gap:8px;width:100%;background:none;border:0;border-left:6px solid var(--pink2);font:inherit;color:var(--ink);padding:2px 4px 2px 8px;cursor:pointer;text-align:left}
+.cy-h b{font-size:17px}.cy-h span{font-size:12px;color:var(--sub)}
+.cy-h.on b{color:var(--pink2)}
+.cm{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-top:8px}
+.mc{display:flex;flex-direction:column;align-items:center;gap:2px;min-height:76px;background:#fff;border:2px solid var(--line);border-radius:12px;padding:5px 2px 4px;font:inherit;color:var(--ink);cursor:pointer;text-align:center}
+.mc b{font-size:14px}
+.mc .c{font-size:12px;color:var(--pink2);font-weight:bold}
+.mc .pg{display:block;width:78%;height:4px;border-radius:9px;background:var(--line);overflow:hidden}
+.mc .pg i{display:block;height:100%;background:#9fd3b4}
+.mc small{font-size:10px;color:var(--sub);white-space:nowrap}
+.mc .ic{font-size:10px;line-height:1.1;min-height:11px;white-space:nowrap}
+.mc.done{background:#f0fbf4;border-color:#9fd3b4}
+.mc.on{border-color:var(--pink2);box-shadow:0 0 0 2px var(--pink)}
+.mc:disabled{opacity:.3;cursor:default;background:transparent;border-style:dashed}
+/* ホーム画面に追加 hint */
+.a2hs{position:relative;background:#fff;border:2px dashed var(--blue2);border-radius:var(--r);padding:12px 44px 12px 14px;margin:0 0 14px;font-size:13px;line-height:1.65;box-shadow:0 3px 0 var(--line)}
+.a2hs b{font-size:14px}
+.a2hs p{margin:4px 0 0}
+.a2hs .si{display:inline-block;width:18px;height:18px;vertical-align:-4px;margin:0 2px}
+.a2hs small{display:block;color:var(--sub);font-size:12px;margin-top:6px;line-height:1.55}
+.a2hs .x{position:absolute;top:8px;right:8px;width:30px;height:30px;padding:0;border-radius:50%;background:#fff;color:var(--sub);border:2px solid var(--line);font:inherit;font-size:14px;cursor:pointer}
+.a2hs .bk-b .btn{font-size:13px;padding:5px 12px}
+.nojs #calBtn,.nojs .a2hs{display:none}
 </style>
 </head>
 <body>
@@ -286,7 +344,11 @@ main{max-width:1400px;margin:0 auto;padding:14px}
     <input type="search" id="q" placeholder="ことばでさがす…（例：ハチワレ）" autocomplete="off">
     <button class="btn blue" id="cont" title="メインのしおりの次の未読から">▶ 続きから<span class="m-hide">読む</span></button>
     <button class="btn" id="bmBtn" title="しおり一覧">🔖<span class="m-hide"> しおり</span><span class="n" id="bmN">0</span></button>
+    <button class="btn ghost" id="calBtn" title="カレンダー（年表）">📅<span class="m-hide"> 年表</span></button>
     <div class="strip">
+    <label class="chip nwc" id="nwChip" hidden><input type="checkbox" id="newOnly">🆕 新着 <b id="nwN">0</b>話</label>
+    <button class="btn ghost sm" id="nwClr" hidden title="NEW の印をすべて消す">✓ 確認済み</button>
+    <label class="chip"><input type="checkbox" id="favOnly">⭐ お気に入り <b id="favN">0</b></label>
     <label class="chip"><input type="checkbox" id="unread">未読のみ</label>
     <select id="year"><option value="">すべての年</option></select>
     <select id="month"><option value="">すべての月</option></select>
@@ -300,7 +362,13 @@ main{max-width:1400px;margin:0 auto;padding:14px}
     </div>
   </div>
 </header>
-<main><div class="grid" id="grid"></div><div class="empty" id="empty" hidden>みつかりませんでした…</div><div class="foot" id="foot"></div></main>
+<main><div class="a2hs" id="a2hs" hidden role="note">
+  <button class="x" id="a2hsX" aria-label="閉じる">✕</button>
+  <b>📱 ホーム画面に追加すると、アプリのように全画面で読めます</b>
+  <p>iPhone の Safari で、下の <svg class="si" viewBox="0 0 24 24" fill="none" stroke="#7dbbe0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-label="共有"><path d="M12 3v12M7.5 7.5 12 3l4.5 4.5"/><path d="M8 10H6a1 1 0 0 0-1 1v9a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-9a1 1 0 0 0-1-1h-2"/></svg><b>共有ボタン</b> →「<b>ホーム画面に追加</b>」をタップ。</p>
+  <small>※ホーム画面から開いたアプリと Safari では、しおり・お気に入り・既読の保存場所が別々です。Safari 側で「🔖 しおり → 💾 バックアップ → 📋 コピー」したコードを、アプリ側の「📥 読み込み」に貼ると移せます。</small>
+  <div class="bk-b"><button class="btn blue" id="a2hsBk">💾 バックアップを開く</button><button class="btn ghost" id="a2hsOk">わかった（もう表示しない）</button></div>
+</div><div class="grid" id="grid"></div><div class="empty" id="empty" hidden>みつかりませんでした…</div><div class="foot" id="foot"></div></main>
 <div class="toast" id="toast"><span id="toastTxt">前回のつづき</span><button class="btn blue" id="resume">ひらく</button><button class="ibtn" style="color:var(--sub)" id="toastX">✕</button></div>
 <button class="btn top-btn" id="toTop" title="上へ">▲</button>
 <div class="snack" id="snack" role="status" aria-live="polite"></div>
@@ -310,9 +378,10 @@ main{max-width:1400px;margin:0 auto;padding:14px}
     <div class="sh-head"><b>🔖 しおり</b><span class="count" id="readStat"></span><button class="btn x" id="shX" aria-label="閉じる">✕</button></div>
     <button class="btn blue wide" id="cont2">▶ 続きから読む<small id="contInfo"></small></button>
     <ul class="bml" id="bml"></ul>
+    <button class="btn ghost wide" id="favGo" style="margin-top:4px">⭐ お気に入り一覧を見る（<span id="favN2">0</span>話）</button>
     <p class="sh-empty" id="bmEmpty" hidden>まだしおりがありません。<br>まんがを開いて上の「🔖」ボタンでしおりをはさめます。<br>ファイルを新しくしてしおりが消えたときは、下の「読み込み」に前にコピーしたコードを貼ってください。</p>
     <div class="bk">
-      <div class="bk-t">💾 バックアップ<small>新しいファイルに入れかえると、しおりが消えることがあります。「コピー」でコードをメモ等に保存し、新しいファイルで「読み込み」してください。</small></div>
+      <div class="bk-t">💾 バックアップ<small>新しいファイルに入れかえたり、ホーム画面のアプリと Safari を行き来すると、しおり・お気に入り・既読が見えないことがあります。「コピー」でコードをメモ等に保存し、もう一方で「読み込み」してください。</small></div>
       <div class="bk-b"><button class="btn" id="exp">📋 コピー</button><button class="btn ghost" id="imp">📥 読み込み</button></div>
       <textarea id="code" rows="3" hidden autocomplete="off" autocapitalize="off" spellcheck="false"></textarea>
       <div class="bk-b" id="impRow" hidden><button class="btn blue" id="impGo">このコードを読み込む</button></div>
@@ -321,12 +390,22 @@ main{max-width:1400px;margin:0 auto;padding:14px}
     <div class="sh-foot"><span id="bkLast"></span><button class="btn ghost" id="readReset">既読をリセット</button></div>
   </div>
 </div>
+<div class="sheet" id="calSheet" hidden>
+  <div class="sheet-bg" id="calBg"></div>
+  <div class="sheet-box" role="dialog" aria-modal="true" aria-label="カレンダー（年表）">
+    <div class="sh-head"><b>📅 年表</b><span class="count" id="calStat"></span><button class="btn x" id="calX" aria-label="閉じる">✕</button></div>
+    <div class="cal-top"><button class="btn ghost sm" id="calAll">すべての年月を表示</button></div>
+    <p class="cal-note">月をタップするとその月の話だけを表示します（年をタップでその年ぜんぶ）。バーと「既読 x/y」は読んだ割合、🆕 新着・🔖 しおり・⭐ お気に入りがある月には印がつきます。</p>
+    <div id="calBody"></div>
+  </div>
+</div>
 
 <!--__STATIC__-->
 
 <div class="modal" id="modal" role="dialog" aria-modal="true">
   <div class="mbar">
     <span class="grow" id="mpos"></span>
+    <button class="ibtn" id="mfav" aria-pressed="false" aria-label="お気に入り" title="お気に入り (F)">☆</button>
     <button class="ibtn" id="mbm" aria-pressed="false">🔖 しおり</button>
     <a class="ibtn" id="mx" target="_blank" rel="noopener noreferrer">Xで見る ↗</a>
     <button class="ibtn" id="mclose" aria-label="閉じる">✕ 閉じる</button>
@@ -342,7 +421,7 @@ main{max-width:1400px;margin:0 auto;padding:14px}
     <div class="row"><span id="mdate"></span><b id="mlike"></b><span id="mthread"></span>
       <div class="pnav"><button class="btn ghost" id="pprev">◀ 前の話</button><button class="btn ghost" id="pnext">次の話 ▶</button><button class="btn ghost" id="prand">🎲</button></div></div>
     <p id="mtext"></p>
-    <div class="hint">← → 画像/話の移動 ・ ↑ ↓ 前後の話 ・ B しおり ・ R ランダム ・ Esc 閉じる</div>
+    <div class="hint">← → 画像/話の移動 ・ ↑ ↓ 前後の話 ・ B しおり ・ F お気に入り ・ R ランダム ・ Esc 閉じる</div>
   </div>
 </div>
 
@@ -385,8 +464,51 @@ const saveMk = () => { mk.r = [...readSet]; try { localStorage.setItem(MK, JSON.
 const bmSorted = () => mk.b.filter(b => byId.has(b.id)).sort((a, b) => b.t - a.t);
 const mainBm = () => bmSorted()[0] || null;
 const isBm = id => mk.b.some(b => b.id === id);
+// ---- お気に入り (own key so older viewer files never drop it: {f: [{id, t}]}) ----
+const FK = "chiikawaViewer.fav.v1";
+const favMap = new Map();
+try { const o = JSON.parse(localStorage.getItem(FK) || "null");
+  if (o && Array.isArray(o.f)) o.f.forEach(x => { if (x && x.id) favMap.set(String(x.id), +x.t || 0); });
+} catch(e) {}
+const saveFav = () => { try { localStorage.setItem(FK, JSON.stringify({f: [...favMap].map(([id, t]) => ({id, t}))})); } catch(e) {} };
+const favCount = () => W.reduce((n, w) => n + (favMap.has(w.id) ? 1 : 0), 0);
+function toggleFav(w){
+  if (favMap.has(w.id)) { favMap.delete(w.id); snack("お気に入りからはずしました"); }
+  else { favMap.set(w.id, Date.now()); snack("⭐ お気に入りに追加しました（" + fmtD(w) + "）"); }
+  saveFav(); mk.dirty = 1; saveMk(); refreshMarks();
+}
+
+// ---- 新着 NEW (key chiikawaViewer.new.v1: {b: newest id at last visit, bd: its date, p: {id: firstSeenMs} still-unread NEW, at}) ----
+// First visit: just record the baseline. Later visits: works newer than the baseline are NEW; the baseline
+// moves to the current newest right away, but unread NEW works stay NEW (up to 14 days) until opened or "✓ 確認済み".
+const NK = "chiikawaViewer.new.v1", NEW_KEEP = 14 * 864e5;
+const cmpW = (d1, id1, d2, id2) => d1 !== d2 ? (d1 < d2 ? -1 : 1) : id1.length !== id2.length ? id1.length - id2.length : (id1 < id2 ? -1 : id1 > id2 ? 1 : 0);
+const newSet = new Set();
+let nk = null;
+function saveNk(){ try { localStorage.setItem(NK, JSON.stringify(nk)); } catch(e) {} }
+(function(){
+  try { nk = JSON.parse(localStorage.getItem(NK) || "null"); } catch(e) { nk = null; }
+  const top = W[0], now = Date.now(), p = {};
+  if (!top) return;
+  if (nk && typeof nk === "object" && nk.b) {
+    const b = String(nk.b), bw = byId.get(b), bd = bw ? bw.d : String(nk.bd || "");
+    const op = nk.p && typeof nk.p === "object" ? nk.p : {};
+    W.forEach(w => { if (cmpW(w.d, w.id, bd, b) > 0 && !readSet.has(w.id)) { newSet.add(w.id); p[w.id] = +op[w.id] || now; } });
+    for (const id in op) if (byId.has(id) && !readSet.has(id) && now - (+op[id] || 0) < NEW_KEEP) { newSet.add(id); p[id] = +op[id]; }
+  }
+  nk = {b: top.id, bd: top.d, p, at: now}; saveNk();
+})();
+function dropNew(id){ if (!newSet.delete(id)) return false; delete nk.p[id]; saveNk(); return true; }
+function updNew(){
+  const n = newSet.size;
+  $("nwN").textContent = n; $("nwChip").hidden = !n; $("nwClr").hidden = !n;
+}
+
 function decorate(c, w, mainId){
   c.classList.toggle("read", readSet.has(w.id));
+  const fo = favMap.has(w.id), fv = c.querySelector(".fv");
+  c.classList.toggle("fav", fo); c.classList.toggle("new", newSet.has(w.id));
+  if (fv) { fv.textContent = fo ? "★" : "☆"; fv.setAttribute("aria-pressed", fo); fv.setAttribute("aria-label", fo ? "お気に入りからはずす" : "お気に入りに追加"); }
   const bm = isBm(w.id), main = bm && w.id === mainId;
   c.classList.toggle("bm", bm); c.classList.toggle("bm-main", main);
   let r = c.querySelector(".rib");
@@ -398,10 +520,13 @@ function refreshMarks(){
   const m = mainBm(), mid = m && m.id;
   document.querySelectorAll("#grid .card").forEach(c => { const w = byId.get(c.dataset.id); if (w) decorate(c, w, mid); });
   $("bmN").textContent = bmSorted().length;
+  $("favN").textContent = favCount(); updNew();
   if (cur >= 0 && modal.classList.contains("open")) updMbm();
   if (!$("sheet").hidden) renderSheet();
+  if (!$("calSheet").hidden) renderCal();
 }
 function markRead(w){
+  if (dropNew(w.id)) { updNew(); const c = document.querySelector(`#grid .card[data-id="${w.id}"]`); if (c) c.classList.remove("new"); }
   if (readSet.has(w.id)) return;
   readSet.add(w.id); saveMk();
   const c = document.querySelector(`#grid .card[data-id="${w.id}"]`); if (c) c.classList.add("read");
@@ -427,20 +552,21 @@ const years = [...new Set(W.map(w => w.y))].sort().reverse();
 years.forEach(y => $("year").add(new Option(y + "年", y)));
 for (let m = 1; m <= 12; m++) { const v = String(m).padStart(2,"0"); $("month").add(new Option(m + "月", v)); }
 $("q").value = st.q || ""; $("year").value = st.y || ""; $("month").value = st.m || ""; $("sort").value = st.sort || "new"; $("unread").checked = !!st.unread;
+$("favOnly").checked = !!st.fav; $("newOnly").checked = !!st.nw && newSet.size > 0;
 
 let list = [];
 function filtered(){
   const q = $("q").value.trim().toLowerCase(), y = $("year").value, m = $("month").value, s = $("sort").value;
   const terms = q ? q.split(/\s+/) : [];
-  const uo = $("unread").checked;
-  let r = W.filter(w => (!y || w.y === y) && (!m || w.m === m) && (!uo || !readSet.has(w.id)) && terms.every(t => w.s.includes(t)));
+  const uo = $("unread").checked, fo = $("favOnly").checked, no = $("newOnly").checked;
+  let r = W.filter(w => (!y || w.y === y) && (!m || w.m === m) && (!uo || !readSet.has(w.id)) && (!fo || favMap.has(w.id)) && (!no || newSet.has(w.id)) && terms.every(t => w.s.includes(t)));
   if (s === "old") r = r.slice().reverse();
   else if (s === "likes") r = r.slice().sort((a,b) => b.l - a.l);
   return r;
 }
 function render(){
   list = filtered();
-  st.q = $("q").value; st.y = $("year").value; st.m = $("month").value; st.sort = $("sort").value; st.unread = $("unread").checked; save();
+  st.q = $("q").value; st.y = $("year").value; st.m = $("month").value; st.sort = $("sort").value; st.unread = $("unread").checked; st.fav = $("favOnly").checked; st.nw = $("newOnly").checked; save();
   const mb = mainBm(), mid = mb && mb.id;
   $("count").textContent = list.length === W.length ? `全 ${W.length.toLocaleString()} 話` : `${list.length.toLocaleString()} / ${W.length.toLocaleString()} 話`;
   const g = $("grid"), frag = document.createDocumentFragment(), bySec = $("sort").value !== "likes";
@@ -451,7 +577,10 @@ function render(){
     if (w.id === st.lastId) c.classList.add("last");
     const im = document.createElement("img"); im.className = "thumb"; im.loading = "lazy"; im.decoding = "async";
     im.referrerPolicy = "no-referrer"; im.alt = w.t.slice(0,40); im.src = imgUrl(w.i[0], "medium");
-    c.appendChild(im);
+    const tw = document.createElement("div"); tw.className = "tw";
+    const nw = document.createElement("span"); nw.className = "nw"; nw.textContent = "NEW";
+    const fv = document.createElement("button"); fv.className = "fv"; fv.type = "button";
+    tw.append(im, nw, fv); c.appendChild(tw);
     if (w.i.length > 1) { const b = document.createElement("span"); b.className = "badge"; b.textContent = "🖼 " + w.i.length; c.appendChild(b); }
     const mt = document.createElement("div"); mt.className = "meta";
     mt.innerHTML = `<span>${w.d.slice(0,10).replace(/-/g,"/")}<i class="rd" title="既読">✓既読</i></span><span class="lk">♥ ${fmtN(w.l)}</span>`;
@@ -459,12 +588,13 @@ function render(){
   });
   g.replaceChildren(frag);
   $("empty").hidden = list.length > 0;
-  $("empty").textContent = $("unread").checked && !list.length ? "未読はありません 🎉" : "みつかりませんでした…";
+  $("empty").textContent = list.length ? "" : $("favOnly").checked && !favCount() ? "お気に入りはまだありません。カードの ☆ をタップすると追加できます。"
+    : $("newOnly").checked ? "新着はありません" : $("unread").checked ? "未読はありません 🎉" : "みつかりませんでした…";
 }
 let tmr; $("q").addEventListener("input", () => { clearTimeout(tmr); tmr = setTimeout(() => { render(); scrollTo(0,0); }, 200); });
-["year","month","sort","unread"].forEach(id => $(id).addEventListener("change", () => { render(); scrollTo(0,0); }));
-$("reset").onclick = () => { $("q").value = ""; $("year").value = ""; $("month").value = ""; $("sort").value = "new"; $("unread").checked = false; render(); scrollTo(0,0); };
-$("grid").addEventListener("click", e => { const c = e.target.closest(".card"); if (c) openAt(+c.dataset.i, 0); });
+["year","month","sort","unread","favOnly","newOnly"].forEach(id => $(id).addEventListener("change", () => { render(); scrollTo(0,0); }));
+$("reset").onclick = () => { $("q").value = ""; $("year").value = ""; $("month").value = ""; $("sort").value = "new"; $("unread").checked = false; $("favOnly").checked = false; $("newOnly").checked = false; render(); scrollTo(0,0); };
+$("grid").addEventListener("click", e => { const f = e.target.closest(".fv"); if (f) { e.stopPropagation(); const w = byId.get(f.closest(".card").dataset.id); if (w) toggleFav(w); return; } const c = e.target.closest(".card"); if (c) openAt(+c.dataset.i, 0); });
 $("rand").onclick = () => list.length && openAt(Math.floor(Math.random() * list.length), 0);
 $("toTop").onclick = () => scrollTo({top:0, behavior:"smooth"});
 let stmr; addEventListener("scroll", () => { $("toTop").style.display = scrollY > 800 ? "block" : "none"; clearTimeout(stmr); stmr = setTimeout(() => { st.scroll = scrollY; save(); }, 300); }, {passive:true});
@@ -495,6 +625,8 @@ function updMbm(){
   const on = isBm(w.id), m = mainBm(), b = $("mbm");
   b.classList.toggle("on", on); b.setAttribute("aria-pressed", on);
   b.textContent = on ? (m && m.id === w.id ? "🔖 しおり中" : "🔖 しおり済") : "🔖 しおり";
+  const f = $("mfav"), fo = favMap.has(w.id);
+  f.classList.toggle("on", fo); f.setAttribute("aria-pressed", fo); f.textContent = fo ? "★" : "☆";
 }
 function showImg(){
   const w = list[cur], k = w.i[ci];
@@ -531,10 +663,12 @@ $("pnext").onclick = () => openAt(cur + 1, 0);
 $("prand").onclick = () => openAt(Math.floor(Math.random() * list.length), 0);
 $("mclose").onclick = close;
 $("mbm").onclick = () => { if (list[cur]) toggleBm(list[cur]); };
+$("mfav").onclick = () => { if (list[cur]) toggleFav(list[cur]); };
 $("stage").addEventListener("click", e => { if (e.target === $("stage")) close(); });
 mimg.addEventListener("click", e => { const r = mimg.getBoundingClientRect(); step(e.clientX - r.left < r.width / 3 ? -1 : 1); });
 addEventListener("keydown", e => {
   if (!$("sheet").hidden) { if (e.key === "Escape") closeSheet(); return; }
+  if (!$("calSheet").hidden) { if (e.key === "Escape") closeCal(); return; }
   if (!modal.classList.contains("open")) { if (e.key === "/" && document.activeElement !== $("q")) { e.preventDefault(); $("q").focus(); } return; }
   if (e.key === "ArrowRight" || e.key === "l") step(1);
   else if (e.key === "ArrowLeft" || e.key === "h") step(-1);
@@ -542,6 +676,7 @@ addEventListener("keydown", e => {
   else if (e.key === "ArrowUp" || e.key === "k") { e.preventDefault(); openAt(cur - 1, 0); }
   else if (e.key === "r" || e.key === "R") $("prand").onclick();
   else if (e.key === "b" || e.key === "B") $("mbm").onclick();
+  else if (e.key === "f" || e.key === "F") $("mfav").onclick();
   else if (e.key === "Escape") close();
 });
 // swipe
@@ -557,7 +692,7 @@ $("stage").addEventListener("touchend", e => {
 // ---- open by id (clears filters if needed) ----
 function openWork(id, img){
   let i = list.findIndex(w => w.id === id);
-  if (i < 0) { $("q").value = ""; $("year").value = ""; $("month").value = ""; $("unread").checked = false; render(); i = list.findIndex(w => w.id === id); }
+  if (i < 0) { $("q").value = ""; $("year").value = ""; $("month").value = ""; $("unread").checked = false; $("favOnly").checked = false; $("newOnly").checked = false; render(); i = list.findIndex(w => w.id === id); }
   if (i >= 0) openAt(i, img || 0);
 }
 function cont(){
@@ -589,7 +724,8 @@ function renderSheet(){
     li.append(im, tx, del); return li;
   }));
   $("bmEmpty").hidden = bs.length > 0;
-  $("bkLast").textContent = mk.dirty && bs.length ? "⚠️ しおりを変えたあと、まだコピーしていません" : (mk.x ? `最後のコピー：${fmtT(mk.x)}` : "");
+  $("favN2").textContent = favCount();
+  $("bkLast").textContent = mk.dirty && (bs.length || favMap.size) ? "⚠️ しおり・お気に入りを変えたあと、まだコピーしていません" : (mk.x ? `最後のコピー：${fmtT(mk.x)}` : "");
 }
 function openSheet(){ renderSheet(); $("sheet").hidden = false; document.body.style.overflow = "hidden"; }
 function closeSheet(){ if ($("sheet").hidden) return; $("sheet").hidden = true; document.body.style.overflow = ""; $("code").hidden = true; $("impRow").hidden = true; $("bkMsg").textContent = ""; }
@@ -600,9 +736,11 @@ $("bml").addEventListener("click", e => {
   const li = e.target.closest("li"); if (!li) return;
   const b = mk.b.find(x => x.id === li.dataset.id); closeSheet(); if (b) openWork(b.id, b.i || 0);
 });
+$("favGo").onclick = () => { closeSheet(); $("q").value = ""; $("year").value = ""; $("month").value = ""; $("unread").checked = false; $("newOnly").checked = false; $("favOnly").checked = true; render(); scrollTo(0,0); };
 $("readReset").onclick = () => { if (!confirm("既読の記録をすべてけしますか？（しおりは残ります）")) return; readSet.clear(); saveMk(); refreshMarks(); render(); snack("既読をリセットしました"); };
 
-// ---- backup code: "CK1." + base64url(JSON) ; ids in base36, read = ranges over old->new order ----
+// ---- backup code: "CK1." / "CK2." + base64url(JSON) ; ids in base36, read = ranges over old->new order ----
+// CK2 = CK1 + f: [[id36, addedMs36], ...] (favorites). Without favorites we still emit CK1 so older viewer files can import it.
 const B36 = typeof BigInt === "function";
 const enc36 = id => { if (B36 && /^\d+$/.test(id)) return BigInt(id).toString(36); return "~" + id; };
 const dec36 = s => { if (s[0] === "~" || !B36) return s.replace(/^~/, ""); let n = BigInt(0); const b = BigInt(36); for (const ch of s) { const d = parseInt(ch, 36); if (isNaN(d)) throw new Error("bad id"); n = n * b + BigInt(d); } return n.toString(); };
@@ -619,15 +757,18 @@ function makeCode(){
   const r = parts.join(",");
   if (r.length <= CODE_MAX_READ) o.r = r; else o.ro = 1;                  // too long -> bookmarks only
   if (st.lastId) o.l = enc36(st.lastId);
-  return {code: "CK1." + btoa(JSON.stringify(o)).replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/, ""), omitted: !!o.ro};
+  const fl = [...favMap].map(([id, t]) => [enc36(id), Math.round(t).toString(36)]);
+  if (fl.length) { o.v = 2; o.f = fl; }
+  return {code: "CK" + o.v + "." + btoa(JSON.stringify(o)).replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/, ""), omitted: !!o.ro};
 }
 function applyCode(txt){
-  const m = /CK1\.([A-Za-z0-9_-]+)/.exec(String(txt || "").replace(/\s+/g, ""));
+  const m = /CK([12])\.([A-Za-z0-9_-]+)/.exec(String(txt || "").replace(/\s+/g, ""));
   if (!m) throw new Error("format");
-  let b64 = m[1].replace(/-/g, "+").replace(/_/g, "/"); while (b64.length % 4) b64 += "=";
+  let b64 = m[2].replace(/-/g, "+").replace(/_/g, "/"); while (b64.length % 4) b64 += "=";
   const o = JSON.parse(atob(b64));
-  if (!o || o.v !== 1 || !Array.isArray(o.b)) throw new Error("format");
-  let nb = 0, nr = 0;
+  if (!o || (o.v !== 1 && o.v !== 2) || !Array.isArray(o.b)) throw new Error("format");
+  let nb = 0, nr = 0, nf = 0;
+  if (Array.isArray(o.f)) o.f.forEach(([id36, t36]) => { const id = dec36(String(id36)); if (!favMap.has(id)) { favMap.set(id, parseInt(t36, 36) || 0); nf++; } });
   o.b.forEach(([id36, t36, i]) => {
     const id = dec36(String(id36)), t = parseInt(t36, 36) || 0, ex = mk.b.find(x => x.id === id);
     if (ex) { if (t > ex.t) { ex.t = t; ex.i = +i || 0; } } else { mk.b.push({id, t, i: +i || 0}); nb++; }
@@ -641,8 +782,9 @@ function applyCode(txt){
     else { add(a); add(z); }
   });
   if (o.l && !st.lastId) { st.lastId = dec36(o.l); save(); }
-  saveMk(); refreshMarks(); render();
-  return {nb, nr, ro: !!o.ro};
+  [...newSet].forEach(id => { if (readSet.has(id)) dropNew(id); });
+  saveFav(); saveMk(); refreshMarks(); render();
+  return {nb, nr, nf, ro: !!o.ro};
 }
 let codeMode = "";
 $("exp").onclick = () => {
@@ -661,28 +803,89 @@ $("exp").onclick = () => {
 };
 $("imp").onclick = () => {
   const ta = $("code");
-  codeMode = "imp"; ta.readOnly = false; ta.value = ""; ta.placeholder = "ここにコード（CK1. からはじまる文字）を貼りつけ"; ta.hidden = false; $("impRow").hidden = false;
-  $("bkMsg").textContent = "コピーしておいたコードを貼りつけて「このコードを読み込む」をおしてください。今のしおりは消えず、合わせて追加されます。";
+  codeMode = "imp"; ta.readOnly = false; ta.value = ""; ta.placeholder = "ここにコード（CK2. または CK1. からはじまる文字）を貼りつけ"; ta.hidden = false; $("impRow").hidden = false;
+  $("bkMsg").textContent = "コピーしておいたコードを貼りつけて「このコードを読み込む」をおしてください。今のしおり・お気に入りは消えず、合わせて追加されます。";
   ta.focus();
 };
 $("impGo").onclick = () => {
   try {
-    const {nb, nr, ro} = applyCode($("code").value);
-    $("bkMsg").textContent = `✅ 読み込みました：しおり +${nb}、既読 +${nr}` + (ro ? "（このコードには既読が入っていません）" : "");
+    const {nb, nr, nf, ro} = applyCode($("code").value);
+    $("bkMsg").textContent = `✅ 読み込みました：しおり +${nb}、お気に入り +${nf}、既読 +${nr}` + (ro ? "（このコードには既読が入っていません）" : "");
     $("code").hidden = true; $("impRow").hidden = true; renderSheet(); snack("🔖 しおりを読み込みました");
-  } catch(e) { $("bkMsg").textContent = "⚠️ コードを読み込めませんでした。CK1. からはじまるコードをまるごと貼りつけてください。"; }
+  } catch(e) { $("bkMsg").textContent = "⚠️ コードを読み込めませんでした。CK2.（または CK1.）からはじまるコードをまるごと貼りつけてください。"; }
 };
 
-addEventListener("hashchange", () => { const h = location.hash.slice(1); if (byId.has(h) && !(modal.classList.contains("open") && list[cur] && list[cur].id === h)) { closeSheet(); openWork(h, 0); } });
+// ---- カレンダー（年表）: years -> months with counts and 既読 progress (JST dates) ----
+const pad2 = n => String(n).padStart(2, "0");
+function renderCal(){
+  const by = new Map();
+  for (const w of W) {
+    const k = w.y + "-" + w.m; let o = by.get(k);
+    if (!o) by.set(k, o = {n: 0, r: 0, b: 0, f: 0, nw: 0});
+    o.n++; if (readSet.has(w.id)) o.r++; if (isBm(w.id)) o.b++; if (favMap.has(w.id)) o.f++; if (newSet.has(w.id)) o.nw++;
+  }
+  const sy = $("year").value, sm = $("month").value, rd = W.filter(w => readSet.has(w.id)).length;
+  $("calStat").textContent = `既読 ${rd.toLocaleString()} / ${W.length.toLocaleString()} 話`;
+  $("calBody").innerHTML = years.map(y => {
+    let yn = 0, yr = 0;
+    const cells = Array.from({length: 12}, (_, k) => {
+      const m = pad2(k + 1), o = by.get(y + "-" + m);
+      if (!o) return `<button class="mc" disabled><b>${k + 1}月</b><span class="c">—</span></button>`;
+      yn += o.n; yr += o.r;
+      const pct = Math.round(o.r / o.n * 100), on = sy === y && sm === m;
+      return `<button class="mc${o.r === o.n ? " done" : ""}${on ? " on" : ""}" data-ym="${y}-${m}" aria-label="${y}年${k + 1}月 ${o.n}話 既読${o.r}">`
+        + `<b>${k + 1}月</b><span class="c">${o.n}話</span><i class="pg"><i style="width:${pct}%"></i></i>`
+        + `<small>既読 ${o.r}/${o.n}</small><span class="ic">${o.nw ? "🆕" : ""}${o.b ? "🔖" : ""}${o.f ? "⭐" + o.f : ""}</span></button>`;
+    }).join("");
+    return `<section class="cy"><button class="cy-h${sy === y && !sm ? " on" : ""}" data-y="${y}"><b>${y}年</b><span>${yn}話 ・ 既読 ${yr}/${yn}</span></button><div class="cm">${cells}</div></section>`;
+  }).join("");
+}
+function openCal(){ renderCal(); $("calSheet").hidden = false; document.body.style.overflow = "hidden";
+  const on = $("calBody").querySelector(".mc.on,.cy-h.on"); if (on) on.scrollIntoView({block: "center"}); }
+function closeCal(){ if ($("calSheet").hidden) return; $("calSheet").hidden = true; document.body.style.overflow = ""; }
+function jumpTo(y, m){
+  $("q").value = ""; $("year").value = y; $("month").value = m;
+  $("unread").checked = false; $("favOnly").checked = false; $("newOnly").checked = false;
+  if ($("sort").value === "likes") $("sort").value = "new";
+  render(); closeCal(); scrollTo(0, 0);
+  snack(y ? `📅 ${y}年${m ? +m + "月" : ""}：${list.length}話` : `📅 すべて：${list.length}話`);
+}
+$("calBtn").onclick = openCal; $("calX").onclick = closeCal; $("calBg").onclick = closeCal;
+$("calAll").onclick = () => jumpTo("", "");
+$("calBody").addEventListener("click", e => {
+  const mc = e.target.closest("[data-ym]"), yh = e.target.closest("[data-y]");
+  if (mc) jumpTo(mc.dataset.ym.slice(0, 4), mc.dataset.ym.slice(5)); else if (yh) jumpTo(yh.dataset.y, "");
+});
+
+// ---- 新着 ----
+$("nwClr").onclick = () => {
+  newSet.clear(); nk.p = {}; saveNk();
+  if ($("newOnly").checked) { $("newOnly").checked = false; render(); }
+  refreshMarks(); snack("新着をすべて確認済みにしました");
+};
+
+// ---- ホーム画面に追加 hint (iPhone Safari etc.; hidden in standalone, once dismissed, or for file://) ----
+const A2K = "chiikawaViewer.a2hs.v1";
+const standalone = navigator.standalone === true || !!(window.matchMedia && matchMedia("(display-mode: standalone)").matches);
+(function(){
+  let dis = false; try { dis = !!localStorage.getItem(A2K); } catch(e) {}
+  const touch = !!(window.matchMedia && matchMedia("(pointer: coarse)").matches) || /iPhone|iPad|iPod/.test(navigator.userAgent);
+  if (!standalone && !dis && touch && /^https?:$/.test(location.protocol)) $("a2hs").hidden = false;
+})();
+const a2hsOff = () => { $("a2hs").hidden = true; try { localStorage.setItem(A2K, String(Date.now())); } catch(e) {} };
+$("a2hsX").onclick = a2hsOff; $("a2hsOk").onclick = a2hsOff;
+$("a2hsBk").onclick = () => openSheet();
+
+addEventListener("hashchange", () => { const h = location.hash.slice(1); if (byId.has(h) && !(modal.classList.contains("open") && list[cur] && list[cur].id === h)) { closeSheet(); closeCal(); openWork(h, 0); } });
 
 // ---- init ----
 render();
-$("bmN").textContent = bmSorted().length;
+$("bmN").textContent = bmSorted().length; $("favN").textContent = favCount(); updNew();
 $("foot").textContent = `データ更新: ${META.built} ・ ${META.posts.toLocaleString()} ポスト / ${META.works.toLocaleString()} 話 ・ 画像は X (pbs.twimg.com) から読み込みます`;
 const hashId = location.hash.slice(1);
 if (hashId && byId.has(hashId)) {
   let i = list.findIndex(w => w.id === hashId);
-  if (i < 0) { $("q").value = ""; $("year").value = ""; $("month").value = ""; render(); i = list.findIndex(w => w.id === hashId); }
+  if (i < 0) { $("q").value = ""; $("year").value = ""; $("month").value = ""; $("favOnly").checked = false; $("newOnly").checked = false; $("unread").checked = false; render(); i = list.findIndex(w => w.id === hashId); }
   if (i >= 0) openAt(i, 0);
 } else {
   if (st.scroll) requestAnimationFrame(() => scrollTo(0, st.scroll));
