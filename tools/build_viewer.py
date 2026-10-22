@@ -67,6 +67,7 @@ def load_works(db):
             "r": root["repost_count"] or 0,
             "n": len(parts),
             "u": root["url"] or f"https://x.com/ngnchiikawa/status/{rid}",
+            "p": [p["id"] for p in parts],   # post ids (for comments; not rendered)
         })
     works.sort(key=lambda w: (w["d"], w["id"]), reverse=True)
     return works, len(rows)
@@ -118,6 +119,8 @@ def render_static(works, meta):
             cur = ym
             out.append(f'<h2 id="m{ym}">{ym[:4]}年{int(ym[5:])}月</h2>')
         meta_attrs = f'data-l="{w["l"]}"' + (f' data-r="{w["r"]}"' if w["r"] else "") + (f' data-n="{w["n"]}"' if w["n"] > 1 else "")
+        if w.get("c") is not None:
+            meta_attrs += f' data-c="{w["c"]}"'   # collected comment count (absent = not collected yet)
         t = f'<p>{esc(w["t"])}</p>' if w["t"] else ""
         if wi < FALLBACK_IMG_WORKS:
             imgs = "".join(f'<img loading="lazy" src="{esc(full_img(k))}" alt="">' for k in w["i"])
@@ -135,16 +138,24 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--db", default=str(HERE.parent / "chiikawa_manga.db"))
     ap.add_argument("--out", default=str(HERE / "chiikawa_viewer.html"))
+    ap.add_argument("--comments-out", default=str(HERE / "site_comments" / "comments"),
+                    help="directory for sharded comments/YYYY-MM.json (deploy next to index.html)")
     a = ap.parse_args()
     if not Path(a.db).exists():
         sys.exit(f"DB not found: {a.db}")
     works, nposts = load_works(a.db)
+    import build_comments
+    ccount, cst = build_comments.build(a.db, works, a.comments_out)
+    for w in works:
+        w["c"] = ccount.get(w["id"])
     meta = {"built": datetime.now(timezone.utc).astimezone().strftime("%Y-%m-%d %H:%M"),
             "posts": nposts, "works": len(works)}
     out = TEMPLATE.replace("<!--__STATIC__-->", render_static(works, meta))
     Path(a.out).write_text(out, encoding="utf-8")
     print(f"wrote {a.out}: {len(works)} works from {nposts} posts, "
           f"{sum(len(w['i']) for w in works)} images, {Path(a.out).stat().st_size/1024:.0f} KB")
+    print(f"comments: {cst['comments']} in {len(ccount)} works -> {cst['files']} files, "
+          f"{cst['bytes']/1024:.0f} KB at {a.comments_out}")
 
 
 TEMPLATE = r"""<!doctype html>
@@ -277,6 +288,25 @@ main{max-width:1400px;margin:0 auto;padding:14px}
 .bml .tag{display:inline-block;background:var(--pink2);color:#fff;font-size:10px;font-weight:bold;border-radius:99px;padding:1px 7px;margin-left:4px;vertical-align:1px}
 .bml .del{flex:none;background:#fff;border:2px solid var(--line);color:var(--sub);border-radius:99px;font:inherit;font-size:12px;padding:5px 10px;cursor:pointer}
 .sh-empty{font-size:13px;color:var(--sub);background:#fff;border-radius:14px;padding:12px;margin:12px 0 0;line-height:1.6}
+/* 💬 comments */
+.cmrow{margin:6px 0 2px}
+.cmrow .btn{font-size:14px;padding:6px 14px}
+.cmrow .btn .n{background:#fff}
+.nojs #cmSheet{display:none}
+.cms{z-index:60}
+.cm-note{font-size:12px;color:var(--sub);margin:0 0 8px;line-height:1.5}
+.cml{list-style:none;margin:0;padding:0}
+.cml li{background:#fff;border-radius:14px;padding:9px 12px 7px;margin-bottom:8px;box-shadow:0 2px 0 var(--line)}
+.cm-h{font-size:13px;line-height:1.4;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.cm-h b{font-size:14px}
+.cm-h small{color:var(--sub);margin-left:4px}
+.cm-t{white-space:pre-wrap;word-break:break-word;font-size:15px;line-height:1.6;margin:4px 0}
+.cm-f{display:flex;gap:10px;align-items:center;font-size:12px;color:var(--sub)}
+.cm-f .lk{color:var(--pink2);font-weight:bold}
+.cm-f a{margin-left:auto;color:var(--blue2);font-weight:bold;text-decoration:none;padding:4px 0}
+.cm-p{display:inline-block;background:var(--blue);color:var(--ink);font-size:10px;border-radius:99px;padding:1px 7px;margin-right:4px;vertical-align:1px}
+.cm-msg{font-size:14px;color:var(--sub);background:#fff;border-radius:14px;padding:14px;line-height:1.7;text-align:center}
+.cm-all{display:block;text-align:center;text-decoration:none;margin-top:10px}
 .bk{margin-top:14px;background:var(--yel);border-radius:14px;padding:10px 12px}
 .bk-t{font-weight:bold;font-size:14px}
 .bk-t small{display:block;font-weight:normal;font-size:11px;color:var(--sub);margin-top:2px;line-height:1.5}
@@ -401,6 +431,15 @@ main{padding-left:max(14px,env(safe-area-inset-left));padding-right:max(14px,env
 </div>
 
 <!--__STATIC__-->
+<div class="sheet cms" id="cmSheet" hidden>
+  <div class="sheet-bg" id="cmBg"></div>
+  <div class="sheet-box" role="dialog" aria-modal="true" aria-label="コメント">
+    <div class="sh-head"><b>💬 コメント</b><span class="count" id="cmStat"></span><button class="btn x" id="cmX" aria-label="閉じる">✕</button></div>
+    <p class="cm-note" id="cmNote"></p>
+    <div id="cmBody"></div>
+    <a class="btn blue wide cm-all" id="cmAll" target="_blank" rel="noopener noreferrer">Xで全部のコメントを見る ↗</a>
+  </div>
+</div>
 
 <div class="modal" id="modal" role="dialog" aria-modal="true">
   <div class="mbar">
@@ -421,6 +460,7 @@ main{padding-left:max(14px,env(safe-area-inset-left));padding-right:max(14px,env
     <div class="row"><span id="mdate"></span><b id="mlike"></b><span id="mthread"></span>
       <div class="pnav"><button class="btn ghost" id="pprev">◀ 前の話</button><button class="btn ghost" id="pnext">次の話 ▶</button><button class="btn ghost" id="prand">🎲</button></div></div>
     <p id="mtext"></p>
+    <div class="cmrow"><button class="btn ghost" id="mcm" aria-haspopup="dialog">💬 コメント <span class="n" id="mcmN"></span></button></div>
     <div class="hint">← → 画像/話の移動 ・ ↑ ↓ 前後の話 ・ B しおり ・ F お気に入り ・ R ランダム ・ Esc 閉じる</div>
   </div>
 </div>
@@ -436,7 +476,7 @@ const W = Array.from(S.getElementsByTagName("article"), a => {
   const p = a.querySelector("p"), ds = a.dataset;
   return {id: a.id.slice(1), d: a.querySelector("time").textContent, t: p ? p.textContent : "",
     i: Array.from(a.querySelectorAll("img,a.ia"), e => e.getAttribute(e.tagName === "IMG" ? "src" : "href")),
-    l: +ds.l || 0, r: +ds.r || 0, n: +ds.n || 1, u: a.querySelector("h3 a").href};
+    l: +ds.l || 0, r: +ds.r || 0, n: +ds.n || 1, u: a.querySelector("h3 a").href, c: ds.c === undefined ? -1 : +ds.c};
 });
 S.remove();
 const LS = "chiikawaViewer.v1";
@@ -612,6 +652,7 @@ function openAt(i, imgIdx){
   $("mlike").textContent = "♥ " + w.l.toLocaleString("ja-JP");
   $("mthread").textContent = w.n > 1 ? `🧵 ${w.n}ポストのスレッド` : "";
   $("mtext").textContent = w.t || "";
+  $("mcmN").textContent = w.c >= 0 ? w.c.toLocaleString("ja-JP") : "未";
   $("pprev").disabled = i === 0; $("pnext").disabled = i === list.length - 1;
   document.querySelectorAll(".card.last").forEach(c => c.classList.remove("last"));
   const card = document.querySelector(`.card[data-id="${w.id}"]`); if (card) card.classList.add("last");
@@ -667,6 +708,7 @@ $("mfav").onclick = () => { if (list[cur]) toggleFav(list[cur]); };
 $("stage").addEventListener("click", e => { if (e.target === $("stage")) close(); });
 mimg.addEventListener("click", e => { const r = mimg.getBoundingClientRect(); step(e.clientX - r.left < r.width / 3 ? -1 : 1); });
 addEventListener("keydown", e => {
+  if (!$("cmSheet").hidden) { if (e.key === "Escape") closeCm(); return; }
   if (!$("sheet").hidden) { if (e.key === "Escape") closeSheet(); return; }
   if (!$("calSheet").hidden) { if (e.key === "Escape") closeCal(); return; }
   if (!modal.classList.contains("open")) { if (e.key === "/" && document.activeElement !== $("q")) { e.preventDefault(); $("q").focus(); } return; }
@@ -688,6 +730,60 @@ $("stage").addEventListener("touchend", e => {
   if (Math.abs(dx) > 50 && Math.abs(dx) > Math.abs(dy) * 1.3) step(dx < 0 ? 1 : -1);
   else if (dy > 90 && Math.abs(dy) > Math.abs(dx) * 1.5) close();
 }, {passive:true});
+
+// ---- 💬 comments (X replies), loaded on demand from comments/YYYY-MM.json ----
+const cmCache = new Map();   // "YYYY-MM" -> Promise<object>
+function loadShard(ym){
+  if (!cmCache.has(ym)) {
+    const pr = fetch("comments/" + ym + ".json", {cache: "no-cache"})
+      .then(r => { if (!r.ok) throw new Error("HTTP " + r.status); return r.json(); });
+    pr.catch(() => cmCache.delete(ym));   // retry next time
+    cmCache.set(ym, pr);
+  }
+  return cmCache.get(ym);
+}
+function cmMsg(html){ const d = document.createElement("div"); d.className = "cm-msg"; d.innerHTML = html; return d; }
+function renderCm(w, data){
+  const body = $("cmBody"), e = data && data[w.id];
+  const cs = e ? e.c.slice() : [];
+  cs.sort((a, b) => (b.l - a.l) || (a.d < b.d ? -1 : a.d > b.d ? 1 : 0));
+  $("cmStat").textContent = cs.length ? `${cs.length.toLocaleString("ja-JP")}件` : "";
+  $("cmNote").textContent = e ? `いいねが多い順。Xにある返信 ${e.x.toLocaleString("ja-JP")}件のうち、集めた${cs.length.toLocaleString("ja-JP")}件だけを表示しています。` : "";
+  if (!cs.length) { body.replaceChildren(cmMsg("このお話へのコメントは見つかりませんでした。<br>Xで見てみてください。")); return; }
+  const ul = document.createElement("ul"); ul.className = "cml";
+  for (const c of cs) {
+    const li = document.createElement("li"); li.dataset.l = c.l; li.dataset.id = c.id;
+    const h = document.createElement("div"); h.className = "cm-h";
+    if (c.p) { const t = document.createElement("span"); t.className = "cm-p"; t.textContent = `🧵 ${c.p}枚目へ`; h.append(t); }
+    const nb = document.createElement("b"); nb.textContent = c.n || c.u;
+    const ub = document.createElement("small"); ub.textContent = "@" + c.u;
+    h.append(nb, ub);
+    const p = document.createElement("p"); p.className = "cm-t"; p.textContent = c.t || "（画像・リンクのみ）";
+    const f = document.createElement("div"); f.className = "cm-f";
+    const dd = document.createElement("span"); dd.textContent = c.d.replace(/-/g, "/");
+    const lk = document.createElement("span"); lk.className = "lk"; lk.textContent = "♡ " + c.l.toLocaleString("ja-JP");
+    const a = document.createElement("a"); a.target = "_blank"; a.rel = "noopener noreferrer";
+    a.href = `https://x.com/${encodeURIComponent(c.u || "i")}/status/${encodeURIComponent(c.id)}`; a.textContent = "Xで開く ↗";
+    f.append(dd, lk, a);
+    li.append(h, p, f); ul.append(li);
+  }
+  body.replaceChildren(ul);
+}
+function openCm(){
+  const w = list[cur]; if (!w) return;
+  $("cmAll").href = w.u; $("cmStat").textContent = ""; $("cmNote").textContent = "";
+  $("cmSheet").hidden = false; $("cmSheet").dataset.id = w.id;
+  const body = $("cmBody");
+  if (w.c < 0) { body.replaceChildren(cmMsg("このお話のコメントは<b>まだ集めていません</b>。<br>下のボタンからXで見られます。")); return; }
+  body.replaceChildren(cmMsg("よみこみ中…"));
+  loadShard(w.d.slice(0, 7)).then(data => { if ($("cmSheet").dataset.id === w.id && !$("cmSheet").hidden) renderCm(w, data); },
+    () => { if ($("cmSheet").dataset.id === w.id) body.replaceChildren(cmMsg(location.protocol === "file:"
+      ? "ファイルを直接ひらいているため、コメントを読み込めませんでした。<br>Webページ版（https://…）でひらくと見られます。"
+      : "コメントを読み込めませんでした 🙇<br>通信のよいところで、もう一度ためしてください。")); });
+}
+function closeCm(){ $("cmSheet").hidden = true; }
+$("mcm").onclick = openCm;
+$("cmX").onclick = closeCm; $("cmBg").onclick = closeCm;
 
 // ---- open by id (clears filters if needed) ----
 function openWork(id, img){
@@ -876,7 +972,7 @@ const a2hsOff = () => { $("a2hs").hidden = true; try { localStorage.setItem(A2K,
 $("a2hsX").onclick = a2hsOff; $("a2hsOk").onclick = a2hsOff;
 $("a2hsBk").onclick = () => openSheet();
 
-addEventListener("hashchange", () => { const h = location.hash.slice(1); if (byId.has(h) && !(modal.classList.contains("open") && list[cur] && list[cur].id === h)) { closeSheet(); closeCal(); openWork(h, 0); } });
+addEventListener("hashchange", () => { const h = location.hash.slice(1); if (byId.has(h) && !(modal.classList.contains("open") && list[cur] && list[cur].id === h)) { closeCm(); closeSheet(); closeCal(); openWork(h, 0); } });
 
 // ---- init ----
 render();
