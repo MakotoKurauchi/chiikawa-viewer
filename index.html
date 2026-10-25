@@ -57,8 +57,9 @@ main{max-width:1400px;margin:0 auto;padding:14px}
 .mbar .grow{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .ibtn{background:rgba(255,255,255,.15);color:#fff;border:0;border-radius:99px;font:inherit;font-size:14px;padding:7px 12px;cursor:pointer;text-decoration:none;white-space:nowrap}
 .ibtn:hover{background:rgba(255,255,255,.28)}
-.stage{flex:1;position:relative;display:flex;align-items:center;justify-content:center;overflow:hidden;touch-action:pan-y pinch-zoom;min-height:0}
-.stage img{max-width:100%;max-height:100%;object-fit:contain;user-select:none;-webkit-user-drag:none;transition:opacity .15s}
+.stage{flex:1;position:relative;display:flex;align-items:center;justify-content:center;overflow:hidden;touch-action:none;min-height:0}
+.stage img{max-width:100%;max-height:100%;object-fit:contain;user-select:none;-webkit-user-select:none;-webkit-user-drag:none;-webkit-touch-callout:none;transition:opacity .15s;transform-origin:50% 50%;will-change:transform}
+.stage.zoomed .nav{display:none}
 .nav{position:absolute;top:50%;transform:translateY(-50%);width:46px;height:46px;border-radius:50%;border:0;background:rgba(255,255,255,.85);color:var(--ink);font-size:22px;cursor:pointer;z-index:2}
 .nav.l{left:10px}.nav.r{right:10px}
 .spin{position:absolute;color:#fff;opacity:.6;font-size:13px}
@@ -270,7 +271,7 @@ main{padding-left:max(14px,env(safe-area-inset-left));padding-right:max(14px,env
   </div>
 </div>
 
-<div id="static" data-built="2026-10-25 08:28" data-posts="1652" data-works="1641">
+<div id="static" data-built="2026-10-25 16:35" data-posts="1652" data-works="1641">
 <p class="nj-note">かんたん表示です（JavaScript がオフのため検索・ビューアは使えません）。画像はインターネット接続が必要です。</p>
 <nav class="nj-toc"><p><b>2026年</b> <a href="#m2026-10">10月</a> <a href="#m2026-09">9月</a> <a href="#m2026-08">8月</a> <a href="#m2026-07">7月</a> <a href="#m2026-06">6月</a> <a href="#m2026-05">5月</a> <a href="#m2026-04">4月</a> <a href="#m2026-03">3月</a> <a href="#m2026-02">2月</a> <a href="#m2026-01">1月</a></p><p><b>2025年</b> <a href="#m2025-12">12月</a> <a href="#m2025-11">11月</a> <a href="#m2025-10">10月</a> <a href="#m2025-09">9月</a> <a href="#m2025-08">8月</a> <a href="#m2025-07">7月</a> <a href="#m2025-06">6月</a> <a href="#m2025-05">5月</a> <a href="#m2025-04">4月</a> <a href="#m2025-03">3月</a> <a href="#m2025-02">2月</a> <a href="#m2025-01">1月</a></p><p><b>2024年</b> <a href="#m2024-12">12月</a> <a href="#m2024-11">11月</a> <a href="#m2024-10">10月</a> <a href="#m2024-09">9月</a> <a href="#m2024-08">8月</a> <a href="#m2024-07">7月</a> <a href="#m2024-06">6月</a> <a href="#m2024-05">5月</a> <a href="#m2024-04">4月</a> <a href="#m2024-03">3月</a> <a href="#m2024-02">2月</a> <a href="#m2024-01">1月</a></p><p><b>2023年</b> <a href="#m2023-12">12月</a> <a href="#m2023-11">11月</a> <a href="#m2023-10">10月</a> <a href="#m2023-09">9月</a> <a href="#m2023-08">8月</a> <a href="#m2023-07">7月</a> <a href="#m2023-06">6月</a> <a href="#m2023-05">5月</a> <a href="#m2023-04">4月</a> <a href="#m2023-03">3月</a> <a href="#m2023-02">2月</a> <a href="#m2023-01">1月</a></p><p><b>2022年</b> <a href="#m2022-12">12月</a> <a href="#m2022-11">11月</a> <a href="#m2022-10">10月</a> <a href="#m2022-09">9月</a> <a href="#m2022-08">8月</a> <a href="#m2022-07">7月</a> <a href="#m2022-06">6月</a> <a href="#m2022-05">5月</a> <a href="#m2022-04">4月</a> <a href="#m2022-03">3月</a> <a href="#m2022-02">2月</a> <a href="#m2022-01">1月</a></p><p><b>2021年</b> <a href="#m2021-12">12月</a> <a href="#m2021-11">11月</a> <a href="#m2021-10">10月</a> <a href="#m2021-09">9月</a> <a href="#m2021-08">8月</a> <a href="#m2021-07">7月</a> <a href="#m2021-06">6月</a> <a href="#m2021-05">5月</a> <a href="#m2021-04">4月</a> <a href="#m2021-03">3月</a> <a href="#m2021-02">2月</a> <a href="#m2021-01">1月</a></p><p><b>2020年</b> <a href="#m2020-12">12月</a> <a href="#m2020-11">11月</a> <a href="#m2020-10">10月</a> <a href="#m2020-09">9月</a> <a href="#m2020-08">8月</a> <a href="#m2020-07">7月</a> <a href="#m2020-06">6月</a> <a href="#m2020-05">5月</a> <a href="#m2020-04">4月</a> <a href="#m2020-03">3月</a> <a href="#m2020-02">2月</a> <a href="#m2020-01">1月</a></p></nav>
 <p class="nj-note">新しい 60 話は画像つき、それより前は「🖼 画像」リンクから開けます。</p>
@@ -2573,6 +2574,7 @@ function showImg(){
   const w = list[cur], k = w.i[ci];
   const d = $("dots"); d.replaceChildren(...(w.i.length > 1 ? w.i.map((_, j) => { const s = document.createElement("span"); if (j === ci) s.className = "on"; s.onclick = () => { ci = j; showImg(); }; return s; }) : []));
   $("spin").style.display = "block";
+  zReset();
   mimg.style.opacity = .35;
   mimg.src = imgUrl(k, "medium");      // fast preview
   const full = new Image(); full.referrerPolicy = "no-referrer";
@@ -2605,8 +2607,14 @@ $("prand").onclick = () => openAt(Math.floor(Math.random() * list.length), 0);
 $("mclose").onclick = close;
 $("mbm").onclick = () => { if (list[cur]) toggleBm(list[cur]); };
 $("mfav").onclick = () => { if (list[cur]) toggleFav(list[cur]); };
-$("stage").addEventListener("click", e => { if (e.target === $("stage")) close(); });
-mimg.addEventListener("click", e => { const r = mimg.getBoundingClientRect(); step(e.clientX - r.left < r.width / 3 ? -1 : 1); });
+$("stage").addEventListener("click", e => { if (e.target === $("stage") && !zNoClick()) close(); });
+mimg.addEventListener("pointerdown", e => { lastPT = e.pointerType; });
+mimg.addEventListener("click", e => {
+  if (zNoClick()) return;
+  const r = mimg.getBoundingClientRect(), dir = e.clientX - r.left < r.width / 3 ? -1 : 1;
+  if (lastPT === "touch") { clearTimeout(tapT); tapT = setTimeout(() => { if (!zNoClick()) step(dir); }, 300); }   // wait: may be a double-tap zoom
+  else step(dir);
+});
 addEventListener("keydown", e => {
   if (!$("cmSheet").hidden) { if (e.key === "Escape") closeCm(); return; }
   if (!$("sheet").hidden) { if (e.key === "Escape") closeSheet(); return; }
@@ -2621,16 +2629,86 @@ addEventListener("keydown", e => {
   else if (e.key === "f" || e.key === "F") $("mfav").onclick();
   else if (e.key === "Escape") close();
 });
-// swipe
-let sx = 0, sy = 0, tracking = false;
-$("stage").addEventListener("touchstart", e => { if (e.touches.length !== 1) { tracking = false; return; } tracking = true; sx = e.touches[0].clientX; sy = e.touches[0].clientY; }, {passive:true});
-$("stage").addEventListener("touchend", e => {
+// pinch zoom + pan (custom, so the zoomed image can be dragged all the way to its edges)
+const stage = $("stage");
+let zs = 1, zx = 0, zy = 0, zLast = 0;
+function zApply(){ mimg.style.transform = zs === 1 && !zx && !zy ? "" : `translate(${zx}px,${zy}px) scale(${zs})`; stage.classList.toggle("zoomed", zs > 1.01); }
+function zClamp(){
+  const sw = stage.clientWidth, sh = stage.clientHeight, w = mimg.offsetWidth * zs, h = mimg.offsetHeight * zs;
+  const mx = Math.max(0, (w - sw) / 2), my = Math.max(0, (h - sh) / 2);
+  zx = Math.min(mx, Math.max(-mx, zx)); zy = Math.min(my, Math.max(-my, zy));
+}
+function zReset(){ zs = 1; zx = 0; zy = 0; zApply(); }
+function zNoClick(){ return zs > 1.01 || Date.now() - zLast < 350; }
+function zCenter(){ const r = stage.getBoundingClientRect(); return [r.left + r.width / 2, r.top + r.height / 2]; }
+// zoom to scale ns keeping screen point (px,py) fixed
+function zTo(ns, px, py){
+  ns = Math.min(6, Math.max(1, ns));
+  const [cx, cy] = zCenter(), qx = (px - cx - zx) / zs, qy = (py - cy - zy) / zs;
+  zs = ns; zx = px - cx - zs * qx; zy = py - cy - zs * qy;
+  if (zs <= 1.01) { zs = 1; zx = 0; zy = 0; }
+  zClamp(); zApply();
+}
+let tapT = 0, lastPT = "";
+let g = null, sx = 0, sy = 0, tracking = false, lastTap = 0;
+const tdist = (a, b) => Math.hypot(a.clientX - b.clientX, a.clientY - b.clientY);
+stage.addEventListener("touchstart", e => {
+  const t = e.touches;
+  if (t.length === 2) {
+    tracking = false;
+    const [cx, cy] = zCenter(), mx = (t[0].clientX + t[1].clientX) / 2, my = (t[0].clientY + t[1].clientY) / 2;
+    g = {m:"pinch", d0:tdist(t[0], t[1]) || 1, s0:zs, qx:(mx - cx - zx) / zs, qy:(my - cy - zy) / zs};
+  } else if (t.length === 1) {
+    sx = t[0].clientX; sy = t[0].clientY;
+    if (zs > 1.01) { g = {m:"pan", x0:zx, y0:zy, moved:false}; tracking = false; }
+    else { g = null; tracking = e.target === mimg || e.target === stage; }
+  }
+}, {passive:true});
+stage.addEventListener("touchmove", e => {
+  const t = e.touches;
+  if (g && g.m === "pinch" && t.length >= 2) {
+    e.preventDefault();
+    const [cx, cy] = zCenter(), mx = (t[0].clientX + t[1].clientX) / 2, my = (t[0].clientY + t[1].clientY) / 2;
+    zs = Math.min(6, Math.max(1, g.s0 * tdist(t[0], t[1]) / g.d0));
+    zx = mx - cx - zs * g.qx; zy = my - cy - zs * g.qy;
+    zClamp(); zApply(); zLast = Date.now();
+  } else if (g && g.m === "pan" && t.length === 1) {
+    e.preventDefault();
+    const dx = t[0].clientX - sx, dy = t[0].clientY - sy;
+    if (Math.abs(dx) + Math.abs(dy) > 6) g.moved = true;
+    zx = g.x0 + dx; zy = g.y0 + dy; zClamp(); zApply(); zLast = Date.now();
+  }
+}, {passive:false});
+stage.addEventListener("touchend", e => {
+  if (g && g.m === "pinch") {
+    if (e.touches.length === 1) { sx = e.touches[0].clientX; sy = e.touches[0].clientY; g = zs > 1.01 ? {m:"pan", x0:zx, y0:zy, moved:true} : null; }
+    else if (!e.touches.length) { if (zs <= 1.05) zReset(); g = null; }
+    zLast = Date.now(); return;
+  }
+  if (g && g.m === "pan") { if (!e.touches.length) g = null; return; }
   if (!tracking) return; tracking = false;
   const dx = e.changedTouches[0].clientX - sx, dy = e.changedTouches[0].clientY - sy;
-  if (Math.abs(dx) > 50 && Math.abs(dx) > Math.abs(dy) * 1.3) step(dx < 0 ? 1 : -1);
-  else if (dy > 90 && Math.abs(dy) > Math.abs(dx) * 1.5) close();
+  if (Math.abs(dx) > 50 && Math.abs(dx) > Math.abs(dy) * 1.3) { zLast = Date.now(); step(dx < 0 ? 1 : -1); }
+  else if (dy > 90 && Math.abs(dy) > Math.abs(dx) * 1.5) { zLast = Date.now(); close(); }
 }, {passive:true});
-
+// double-tap: zoom in at that spot / back to fit
+stage.addEventListener("touchend", e => {
+  if (e.touches.length || e.changedTouches.length !== 1) return;
+  const c = e.changedTouches[0], now = Date.now();
+  if (Math.abs(c.clientX - sx) > 10 || Math.abs(c.clientY - sy) > 10) { lastTap = 0; return; }
+  if (now - lastTap < 300 && (e.target === mimg || e.target === stage)) {
+    lastTap = 0; e.preventDefault();
+    if (zs > 1.01) zReset(); else zTo(2.5, c.clientX, c.clientY);
+    zLast = now; clearTimeout(tapT);
+  } else lastTap = now;
+}, {passive:false});
+["gesturestart", "gesturechange"].forEach(n => stage.addEventListener(n, e => e.preventDefault()));
+// desktop: ctrl/trackpad-pinch wheel zooms, plain wheel pans when zoomed
+stage.addEventListener("wheel", e => {
+  if (e.ctrlKey) { e.preventDefault(); zTo(zs * Math.exp(-e.deltaY / 100), e.clientX, e.clientY); zLast = Date.now(); }
+  else if (zs > 1.01) { e.preventDefault(); zx -= e.deltaX; zy -= e.deltaY; zClamp(); zApply(); }
+}, {passive:false});
+addEventListener("resize", () => { if (zs > 1) { zClamp(); zApply(); } });
 // ---- 💬 comments (X replies), loaded on demand from comments/YYYY-MM.json ----
 const cmCache = new Map();   // "YYYY-MM" -> Promise<object>
 function loadShard(ym){
